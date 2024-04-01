@@ -20,7 +20,7 @@ def copy_file(dst, src=os.getcwd()):
                 pair_file_list.append((source_file, target_file))
 
     for source_file, target_file in pair_file_list:
-        if (os.path.dirname(source_file) in copy_dirs):
+        if os.path.dirname(source_file) in copy_dirs:
             os.makedirs(os.path.dirname(target_file), exist_ok=True)
             shutil.copy(source_file, target_file)
 
