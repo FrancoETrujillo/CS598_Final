@@ -1,3 +1,6 @@
+import sys
+
+sys.path.insert(0, '..')
 import numpy as np
 import os
 import pickle
@@ -8,7 +11,8 @@ import statistics as stat
 import sys
 from pathlib import Path
 
-sys.path.append('../mimic3-benchmarks')
+# sys.path.append('../mimic3-benchmarks')
+from GlobalConfigs import *
 
 from mimic3benchmark.readers import InHospitalMortalityReader, PhenotypingReader
 from mimic3models import common_utils
@@ -349,7 +353,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--data', type=str, help='Path to the data of task',
                         default=os.path.join(os.path.dirname(__file__),
-                                             '../mimic3-benchmarks/data/in-hospital-mortality/'))  # '../mimic3-benchmarks/data/phenotyping/'
+                                             f"{BENCHMARKS_ROOT_PATH}/data/in-hospital-mortality/"))  # '../mimic3-benchmarks/data/phenotyping/'
     parser.add_argument("--period_length", default=48, type=int, help="period length of reader.")  # 24
     parser.add_argument("--task", default='ihm', type=str, help="task name to create data")
     parser.add_argument("--outputdir", default='./Data/', type=str, help="data output dir")  # './Data/pheno/'

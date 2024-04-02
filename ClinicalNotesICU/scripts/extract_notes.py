@@ -1,6 +1,11 @@
+import sys
+
+sys.path.insert(0, '..')
+
 from scipy import stats
 import os
 import pandas as pd
+from GlobalConfigs import *
 
 """
 Preprocess PubMed abstracts or MIMIC-III reports
@@ -9,6 +14,8 @@ import re
 import json
 
 from nltk import sent_tokenize, word_tokenize
+
+dataset_types = ["train", "test"]
 
 SECTION_TITLES = re.compile(
     r'('
@@ -110,21 +117,6 @@ def preprocess_mimic(text):
             yield text.lower()
 
 
-df = pd.read_csv('/mnt/disks/mimic3/data/data/NOTEEVENTS.csv')
-df.CHARTDATE = pd.to_datetime(df.CHARTDATE)
-df.CHARTTIME = pd.to_datetime(df.CHARTTIME)
-df.STORETIME = pd.to_datetime(df.STORETIME)
-
-df2 = df[df.SUBJECT_ID.notnull()]
-df2 = df2[df2.HADM_ID.notnull()]
-df2 = df2[df2.CHARTTIME.notnull()]
-df2 = df2[df2.TEXT.notnull()]
-
-df2 = df2[['SUBJECT_ID', 'HADM_ID', 'CHARTTIME', 'TEXT']]
-
-del df
-
-
 def filter_for_first_hrs(dataframe, _days=2):
     min_time = dataframe.CHARTTIME.min()
     return dataframe[dataframe.CHARTTIME < min_time + pd.Timedelta(days=_days)]
@@ -138,77 +130,99 @@ def getSentences(t):
     return list(preprocess_mimic(t))
 
 
-# df_filtered = df2.groupby('HADM_ID').apply(
-#    lambda x: filter_for_first_hrs(x, 2))
-# print(df_filtered.shape)
-print(df2.groupby('HADM_ID').count().describe())
-'''
-count  55926.000000  55926.000000  55926.000000
-mean      28.957283     28.957283     28.957283
-std       59.891679     59.891679     59.891679
-min        1.000000      1.000000      1.000000
-25%        5.000000      5.000000      5.000000
-50%       11.000000     11.000000     11.000000
-75%       27.000000     27.000000     27.000000
-max     1214.000000   1214.000000   1214.000000
-'''
+for dataset_type in dataset_types:
 
-dataset_path = '/home/expumn_gmail_com/mimic3-text/mimic3-benchmarks/data/root/test/'
-all_files = os.listdir(dataset_path)
-all_folders = list(filter(lambda x: x.isdigit(), all_files))
+    train_dataset_path = f"{BENCHMARKS_ROOT_PATH}/data/root/train/"
+    test_dataset_path = f"{BENCHMARKS_ROOT_PATH}/data/root/test/"
+    train_output_folder = f"{NOTE_EXTRACTION_OUT_PATH}/train"
+    test_output_folder = f"{NOTE_EXTRACTION_OUT_PATH}/test"
 
-output_folder = '/home/expumn_gmail_com/mimic3-text/mimic3-benchmarks/data/root/test_text_fixed/'
+    output_folder = train_output_folder if dataset_type == "train" else test_output_folder
+    dataset_path = train_dataset_path if dataset_type == "train" else test_dataset_path
 
-suceed = 0
-failed = 0
-failed_exception = 0
+    os.makedirs(output_folder, exist_ok=True)
+    df = pd.read_csv(f"{MIMIC_UNPROCESSED_DATA_PATH}/NOTEEVENTS.csv")
+    df.CHARTDATE = pd.to_datetime(df.CHARTDATE)
+    df.CHARTTIME = pd.to_datetime(df.CHARTTIME)
+    df.STORETIME = pd.to_datetime(df.STORETIME)
 
-all_folders = all_folders
+    df2 = df[df.SUBJECT_ID.notnull()]
+    df2 = df2[df2.HADM_ID.notnull()]
+    df2 = df2[df2.CHARTTIME.notnull()]
+    df2 = df2[df2.TEXT.notnull()]
 
-sentence_lens = []
-hadm_id2index = {}
+    df2 = df2[['SUBJECT_ID', 'HADM_ID', 'CHARTTIME', 'TEXT']]
 
-for folder in all_folders:
-    try:
-        patient_id = int(folder)
-        sliced = df2[df2.SUBJECT_ID == patient_id]
-        if sliced.shape[0] == 0:
-            print("No notes for PATIENT_ID : {}".format(patient_id))
-            failed += 1
-            continue
-        sliced.sort_values(by='CHARTTIME')
+    del df
 
-        # get the HADM_IDs from the stays.csv.
-        stays_path = os.path.join(dataset_path, folder, 'stays.csv')
-        stays_df = pd.read_csv(stays_path)
-        hadm_ids = list(stays_df.HADM_ID.values)
+    # df_filtered = df2.groupby('HADM_ID').apply(
+    #    lambda x: filter_for_first_hrs(x, 2))
+    # print(df_filtered.shape)
+    print(df2.groupby('HADM_ID').count().describe())
+    '''
+    count  55926.000000  55926.000000  55926.000000
+    mean      28.957283     28.957283     28.957283
+    std       59.891679     59.891679     59.891679
+    min        1.000000      1.000000      1.000000
+    25%        5.000000      5.000000      5.000000
+    50%       11.000000     11.000000     11.000000
+    75%       27.000000     27.000000     27.000000
+    max     1214.000000   1214.000000   1214.000000
+    '''
 
-        for ind, hid in enumerate(hadm_ids):
-            hadm_id2index[str(hid)] = str(ind)
+    all_files = os.listdir(dataset_path)
+    all_folders = list(filter(lambda x: x.isdigit(), all_files))
 
-            sliced = sliced[sliced.HADM_ID == hid]
-            # text = sliced.TEXT.str.cat(sep=' ')
-            # text = "*****".join(list(preprocess_mimic(text)))
-            data_json = {}
-            for index, row in sliced.iterrows():
-                # f.write("%s\t%s\n" % (row['CHARTTIME'], getText(row['TEXT'])))
-                data_json["{}".format(row['CHARTTIME'])
-                ] = getSentences(row['TEXT'])
+    suceed = 0
+    failed = 0
+    failed_exception = 0
 
-            with open(os.path.join(output_folder, folder + '_' + str(ind + 1)), 'w') as f:
-                json.dump(data_json, f)
+    all_folders = all_folders
 
-        suceed += 1
-    except:
-        import traceback
+    sentence_lens = []
+    hadm_id2index = {}
 
-        traceback.print_exc()
-        print("Failed with Exception FOR Patient ID: %s", folder)
-        failed_exception += 1
+    for folder in all_folders:
+        try:
+            patient_id = int(folder)
+            sliced = df2[df2.SUBJECT_ID == patient_id]
+            if sliced.shape[0] == 0:
+                print("No notes for PATIENT_ID : {}".format(patient_id))
+                failed += 1
+                continue
+            sliced.sort_values(by='CHARTTIME')
 
-print("Sucessfully Completed: %d/%d" % (suceed, len(all_folders)))
-print("No Notes for Patients: %d/%d" % (failed, len(all_folders)))
-print("Failed with Exception: %d/%d" % (failed_exception, len(all_folders)))
+            # get the HADM_IDs from the stays.csv.
+            stays_path = os.path.join(dataset_path, folder, 'stays.csv')
+            stays_df = pd.read_csv(stays_path)
+            hadm_ids = list(stays_df.HADM_ID.values)
 
-with open(os.path.join(output_folder, 'test_hadm_id2index'), 'w') as f:
-    json.dump(hadm_id2index, f)
+            for ind, hid in enumerate(hadm_ids):
+                hadm_id2index[str(hid)] = str(ind)
+
+                sliced = sliced[sliced.HADM_ID == hid]
+                # text = sliced.TEXT.str.cat(sep=' ')
+                # text = "*****".join(list(preprocess_mimic(text)))
+                data_json = {}
+                for index, row in sliced.iterrows():
+                    # f.write("%s\t%s\n" % (row['CHARTTIME'], getText(row['TEXT'])))
+                    data_json["{}".format(row['CHARTTIME'])
+                    ] = getSentences(row['TEXT'])
+
+                with open(os.path.join(output_folder, folder + '_' + str(ind + 1)), 'w') as f:
+                    json.dump(data_json, f)
+
+            suceed += 1
+        except:
+            import traceback
+
+            traceback.print_exc()
+            print("Failed with Exception FOR Patient ID: %s", folder)
+            failed_exception += 1
+
+    print("Sucessfully Completed: %d/%d" % (suceed, len(all_folders)))
+    print("No Notes for Patients: %d/%d" % (failed, len(all_folders)))
+    print("Failed with Exception: %d/%d" % (failed_exception, len(all_folders)))
+
+    with open(os.path.join(output_folder, 'test_hadm_id2index'), 'w') as f:
+        json.dump(hadm_id2index, f)

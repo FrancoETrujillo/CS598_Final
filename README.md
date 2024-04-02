@@ -45,6 +45,49 @@ wget -r -N -c -np https://physionet.org/files/mimiciii-demo/1.4/
 ./decompress_mimic.sh -d data/MIMICIII_Original -o data/mimic3
 ```
 
+### Folder Structure
+
+```
+.
+├── ClinicalNotesICU
+│   ├── models
+│   └── scripts
+├── mimic3-benchmarks
+│   ├── data
+│   │   ├── decompensation
+│   │   ├── in-hospital-mortality
+│   │   ├── length-of-stay
+│   │   ├── multitask
+│   │   ├── phenotyping
+│   │   └── root
+│   │       ├── test_text_fixed
+│   │       └── text_fixed
+│   ├── mimic3benchmark
+│   │   ├── evaluation
+│   │   ├── resources
+│   │   ├── scripts
+│   │   └── tests
+│   │       └── resources
+│   └── mimic3models
+│       ├── decompensation
+│       │   └── logistic
+│       ├── in_hospital_mortality
+│       │   └── logistic
+│       ├── keras_models
+│       ├── length_of_stay
+│       │   └── logistic
+│       ├── multitask
+│       ├── phenotyping
+│       │   └── logistic
+│       └── resources
+└── MultimodalMIMIC
+    ├── Data
+    │   ├── ihm
+    │   └── irregular
+    └── run
+        └── TS_Text
+```
+
 ### Build benchmark data
 
 ``` shell
@@ -67,5 +110,10 @@ mimic_original_csvs folders
 ```shell
 ./extract_med_notes.sh
 ```
+
+## Multimodal Mimic
+
+### Preprocess
+
 
 
