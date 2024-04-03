@@ -27,7 +27,7 @@ def main():
         args.mixed_precision = "fp16"
     else:
         args.mixed_precision = "no"
-    accelerator = Accelerator(fp16=args.fp16, mixed_precision=args.mixed_precision, cpu=args.cpu)
+    accelerator = Accelerator(mixed_precision=args.mixed_precision, cpu=args.cpu)
 
     device = accelerator.device
     print(device)

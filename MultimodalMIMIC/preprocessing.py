@@ -1,6 +1,8 @@
 import sys
 
 sys.path.insert(0, '..')
+sys.path.append('../mimic3-benchmarks')
+
 import numpy as np
 import os
 import pickle
@@ -11,7 +13,6 @@ import statistics as stat
 import sys
 from pathlib import Path
 
-# sys.path.append('../mimic3-benchmarks')
 from GlobalConfigs import *
 
 from mimic3benchmark.readers import InHospitalMortalityReader, PhenotypingReader
@@ -331,6 +332,7 @@ def merge_text_ts(textdict, timedict, start_times, tslist, period_length, dataPa
     for idx, ts_dict in enumerate(tslist):
         name = ts_dict['name']
         if name in textdict:
+            print("Franco", textdict)
             ts_dict['text_data'] = textdict[name]
 
             ts_dict['text_time_to_end'] = \
@@ -369,30 +371,39 @@ if __name__ == "__main__":
     if args.task == 'ihm':
 
         # Build readers, discretizers, normalizers
+        # train_listfile.csv, listfile.csv, listfile.csv -> listfile.csv
+        ihm_train_data_path = os.path.join(args.data, 'train')
+
         train_reader = InHospitalMortalityReader(dataset_dir=os.path.join(args.data, 'train'),
-                                                 listfile=os.path.join(args.data, 'train_listfile.csv'),
+                                                 listfile=os.path.join(ihm_train_data_path, 'listfile.csv'),
                                                  period_length=args.period_length)
         val_reader = InHospitalMortalityReader(dataset_dir=os.path.join(args.data, 'train'),
-                                               listfile=os.path.join(args.data, 'val_listfile.csv'),
+                                               listfile=os.path.join(ihm_train_data_path, 'listfile.csv'),
                                                period_length=args.period_length)
 
-        test_reader = InHospitalMortalityReader(dataset_dir=os.path.join(args.data, 'test'),
-                                                listfile=os.path.join(args.data, 'test_listfile.csv'),
-                                                period_length=args.period_length)
+        ihm_test_data_path = os.path.join(args.data, 'test')
 
+        test_reader = InHospitalMortalityReader(dataset_dir=os.path.join(args.data, 'test'),
+                                                listfile=os.path.join(ihm_test_data_path, 'listfile.csv'),
+                                                period_length=args.period_length)
 
     elif args.task == 'pheno':
 
         # Build readers, discretizers, normalizers
+        # train_listfile.csv, listfile.csv, listfile.csv -> listfile.csv
+        pheno_train_data_path = os.path.join(args.data, 'train')
+
         train_reader = PhenotypingReader(dataset_dir=os.path.join(args.data, 'train'),
-                                         listfile=os.path.join(args.data, 'train_listfile.csv'),
+                                         listfile=os.path.join(pheno_train_data_path, 'listfile.csv'),
                                          period_length=args.period_length)
         val_reader = PhenotypingReader(dataset_dir=os.path.join(args.data, 'train'),
-                                       listfile=os.path.join(args.data, 'val_listfile.csv'),
+                                       listfile=os.path.join(pheno_train_data_path, 'listfile.csv'),
                                        period_length=args.period_length)
 
+        pheno_test_data_path = os.path.join(args.data, 'test')
+
         test_reader = PhenotypingReader(dataset_dir=os.path.join(args.data, 'test'),
-                                        listfile=os.path.join(args.data, 'test_listfile.csv'),
+                                        listfile=os.path.join(pheno_test_data_path, 'listfile.csv'),
                                         period_length=args.period_length)
 
     discretizer = Discretizer_multi(timestep=float(args.timestep),
@@ -404,8 +415,9 @@ if __name__ == "__main__":
     cont_channels = [i for (i, x) in enumerate(discretizer_header) if x.find("->") == -1]
 
     normalizer = Normalizer(fields=cont_channels)  # choose here which columns to standardize
-    normalizer_state = '../mimic3-benchmarks/mimic3models/in_hospital_mortality/ihm_ts{}.input_str:{}.start_time:zero.normalizer'.format(
-        args.timestep, args.imputation)
+    # normalizer_state = '../mimic3-benchmarks/mimic3models/in_hospital_mortality/ihm_ts{}.input_str-{}.start_time-zero.normalizer'.format(
+    #     args.timestep, args.imputation)
+    normalizer_state = f'{BENCHMARKS_ROOT_PATH}/mimic3models/in_hospital_mortality/ihm_ts{args.timestep}.input_str-{args.imputation}.start_time-zero.normalizer'
     normalizer_state = os.path.join(os.path.dirname(__file__), normalizer_state)
     normalizer.load_params(normalizer_state)
 
@@ -423,10 +435,14 @@ if __name__ == "__main__":
                   output_dir + 'norm_ts_' + mode + '.pkl', \
                   output_dir + 'mean_std.pkl')
 
-    textdata_fixed = "../mimic3-benchmarks/data/root/text_fixed/"
-    starttime_path = "../mimic3-benchmarks/starttime.pkl"
-    test_textdata_fixed = "../mimic3-benchmarks/data/root/test_text_fixed/"
-    test_starttime_path = "../mimic3-benchmarks/test_starttime.pkl"
+    # textdata_fixed = "../mimic3-benchmarks/data/root/text_fixed/"
+    # starttime_path = "../mimic3-benchmarks/starttime.pkl"
+    # test_textdata_fixed = "../mimic3-benchmarks/data/root/test_text_fixed/"
+    # test_starttime_path = "../mimic3-benchmarks/test_starttime.pkl"
+    textdata_fixed = f"{BENCHMARKS_ROOT_PATH}/data/root/text_fixed/train/"
+    starttime_path = f"{BENCHMARKS_ROOT_PATH}/data/starttime.pkl"
+    test_textdata_fixed = f"{BENCHMARKS_ROOT_PATH}/data/root/text_fixed/test/"
+    test_starttime_path = f"{BENCHMARKS_ROOT_PATH}/data/test_starttime.pkl"
 
     for mode in ['train', 'val', 'test']:
         with open(output_dir + 'norm_ts_' + mode + '.pkl', 'rb') as f:

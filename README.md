@@ -115,5 +115,8 @@ mimic_original_csvs folders
 
 ### Preprocess
 
+```shell
+python MultimodalMIMIC/preprocessing.py
+```
 
 

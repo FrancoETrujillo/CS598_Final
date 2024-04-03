@@ -2,8 +2,8 @@ import os
 import sys
 
 sys.path.insert(0, '../')
-sys.path.insert(0, '../TS/mimic3-benchmarks')
-sys.path.insert(0, '../ClinicalNotes_TimeSeries/models')
+sys.path.insert(0, '../mimic3-benchmarks')
+sys.path.insert(0, '../ClinicalNotesICU/models')
 import pickle
 import re
 import numpy as np
