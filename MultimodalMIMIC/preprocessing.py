@@ -1,7 +1,7 @@
 import sys
 
-sys.path.insert(0, '..')
-sys.path.append('../mimic3-benchmarks')
+sys.path.insert(0, '.')
+sys.path.append('./mimic3-benchmarks')
 
 import numpy as np
 import os
@@ -19,6 +19,8 @@ from mimic3benchmark.readers import InHospitalMortalityReader, PhenotypingReader
 from mimic3models import common_utils
 from mimic3models.preprocessing import Normalizer
 from text_utils import *
+
+print("Executing mimic multimodal preprocess")
 
 
 class Discretizer_multi:
