@@ -1,7 +1,10 @@
 import sys
-
 sys.path.insert(0, '.')
-sys.path.append('./mimic3-benchmarks')
+
+from GlobalConfigs import *
+
+sys.path.append(BENCHMARKS_ROOT_PATH)
+sys.path.append(PROJECT_BASE_PATH)
 
 import numpy as np
 import os
@@ -13,20 +16,18 @@ import statistics as stat
 import sys
 from pathlib import Path
 
-from GlobalConfigs import *
-
 from mimic3benchmark.readers import InHospitalMortalityReader, PhenotypingReader
 from mimic3models import common_utils
 from mimic3models.preprocessing import Normalizer
 from text_utils import *
 
-print("Executing mimic multimodal preprocess")
+print("Executing mimic multimodal preprocess", flush=True)
 
 
 class Discretizer_multi:
     def __init__(self, timestep=0.8, store_masks=True, impute_strategy='zero', start_time='zero',
-                 config_path=os.path.join(os.path.dirname(__file__), 'Data/irregular/discretizer_config.json'),
-                 channel_path=os.path.join(os.path.dirname(__file__), 'Data/irregular/channel_info.json')):
+                 config_path=os.path.join(MULTI_MODAL_MIMIC_PATH, 'Data/irregular/discretizer_config.json'),
+                 channel_path=os.path.join(MULTI_MODAL_MIMIC_PATH, 'Data/irregular/channel_info.json')):
 
         with open(config_path) as f:
             config = json.load(f)
@@ -195,8 +196,8 @@ def get_time_to_end_diffs(times, st, endtime=49):
 
 def extract_irregular(dataPath_in, dataPath_out):
     # Opening JSON file
-    channel_info_file = open('Data/irregular/channel_info.json')
-    dis_config_file = open('Data/irregular/discretizer_config.json')
+    channel_info_file = open(f"{MULTI_MODAL_MIMIC_PATH}/Data/irregular/channel_info.json")
+    dis_config_file = open(f"{MULTI_MODAL_MIMIC_PATH}/Data/irregular/discretizer_config.json")
     channel_info = json.load(channel_info_file)
     dis_config = json.load(dis_config_file)
     channel_name = dis_config['id_to_channel']
@@ -334,44 +335,41 @@ def merge_text_ts(textdict, timedict, start_times, tslist, period_length, dataPa
     for idx, ts_dict in enumerate(tslist):
         name = ts_dict['name']
         if name in textdict:
-            print("Franco", textdict)
             ts_dict['text_data'] = textdict[name]
-
             ts_dict['text_time_to_end'] = \
                 get_time_to_end_diffs(timedict[name], start_times[name], endtime=period_length + 1)[0]
             suceed += 1
         else:
             missing += 1
 
-    print("Suceed Merging: ", suceed)
-    print("Missing Merging: ", missing)
+    print("Suceed Merging: ", suceed, flush=True)
+    print("Missing Merging: ", missing, flush=True)
 
     with open(dataPath_out, 'wb') as f:
+        print("File dumped at:", dataPath_out, flush=True)
         pickle.dump(tslist, f)
     return
 
 
-if __name__ == "__main__":
-    dir_input = "../mimic3-benchmarks/"
-
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data', type=str, help='Path to the data of task',
-                        default=os.path.join(os.path.dirname(__file__),
-                                             f"{BENCHMARKS_ROOT_PATH}/data/in-hospital-mortality/"))  # '../mimic3-benchmarks/data/phenotyping/'
+                        default=f"{BENCHMARKS_ROOT_PATH}/data/in-hospital-mortality/")  # '../mimic3-benchmarks/data/phenotyping/'
     parser.add_argument("--period_length", default=48, type=int, help="period length of reader.")  # 24
     parser.add_argument("--task", default='ihm', type=str, help="task name to create data")
-    parser.add_argument("--outputdir", default='./Data/', type=str, help="data output dir")  # './Data/pheno/'
+    parser.add_argument("--outputdir", default=f"{MULTI_MODAL_MIMIC_PATH}/Data/", type=str,
+                        help="data output dir")  # './Data/pheno/'
     parser.add_argument('--timestep', type=float, default=1.0,
                         help="fixed timestep used in the dataset")
     parser.add_argument('--imputation', type=str, default='previous')
     parser.add_argument('--small_part', dest='small_part', action='store_true')
     args = parser.parse_args()
-    print(args)
+    print(args, flush=True)
 
     output_dir = args.outputdir + args.task + "/"
 
     if args.task == 'ihm':
-
+        print("Preprocessing ihm", flush=True)
         # Build readers, discretizers, normalizers
         # train_listfile.csv, listfile.csv, listfile.csv -> listfile.csv
         ihm_train_data_path = os.path.join(args.data, 'train')
@@ -390,6 +388,7 @@ if __name__ == "__main__":
                                                 period_length=args.period_length)
 
     elif args.task == 'pheno':
+        print("Preprocessing pheno", flush=True)
 
         # Build readers, discretizers, normalizers
         # train_listfile.csv, listfile.csv, listfile.csv -> listfile.csv
@@ -417,10 +416,8 @@ if __name__ == "__main__":
     cont_channels = [i for (i, x) in enumerate(discretizer_header) if x.find("->") == -1]
 
     normalizer = Normalizer(fields=cont_channels)  # choose here which columns to standardize
-    # normalizer_state = '../mimic3-benchmarks/mimic3models/in_hospital_mortality/ihm_ts{}.input_str-{}.start_time-zero.normalizer'.format(
-    #     args.timestep, args.imputation)
     normalizer_state = f'{BENCHMARKS_ROOT_PATH}/mimic3models/in_hospital_mortality/ihm_ts{args.timestep}.input_str-{args.imputation}.start_time-zero.normalizer'
-    normalizer_state = os.path.join(os.path.dirname(__file__), normalizer_state)
+    # normalizer_state = os.path.join(os.path.dirname(__file__), normalizer_state)
     normalizer.load_params(normalizer_state)
 
     save_data(train_reader, discretizer, output_dir, args.small_part, mode='train')
@@ -428,13 +425,17 @@ if __name__ == "__main__":
     save_data(test_reader, discretizer, output_dir, args.small_part, mode='test')
 
     for mode in ['train', 'val', 'test']:
+        print(f"Extracting {mode} irregular data", flush=True)
+
         extract_irregular(output_dir + 'ts_' + mode + '.pkl', output_dir + 'ts_' + mode + '.pkl')
     # calculate mean,std of ts
     mean_std(output_dir + 'ts_train.pkl', output_dir + 'mean_std.pkl')
 
     for mode in ['train', 'val', 'test']:
-        normalize(output_dir + 'ts_' + mode + '.pkl', \
-                  output_dir + 'norm_ts_' + mode + '.pkl', \
+        print(f"Normalizing {mode} times data", flush=True)
+
+        normalize(output_dir + 'ts_' + mode + '.pkl',
+                  output_dir + 'norm_ts_' + mode + '.pkl',
                   output_dir + 'mean_std.pkl')
 
     # textdata_fixed = "../mimic3-benchmarks/data/root/text_fixed/"
@@ -442,11 +443,13 @@ if __name__ == "__main__":
     # test_textdata_fixed = "../mimic3-benchmarks/data/root/test_text_fixed/"
     # test_starttime_path = "../mimic3-benchmarks/test_starttime.pkl"
     textdata_fixed = f"{BENCHMARKS_ROOT_PATH}/data/root/text_fixed/train/"
-    starttime_path = f"{BENCHMARKS_ROOT_PATH}/data/starttime.pkl"
+    starttime_path = f"{BENCHMARKS_ROOT_PATH}/data/root/text_fixed/starttime.pkl"
     test_textdata_fixed = f"{BENCHMARKS_ROOT_PATH}/data/root/text_fixed/test/"
-    test_starttime_path = f"{BENCHMARKS_ROOT_PATH}/data/test_starttime.pkl"
+    test_starttime_path = f"{BENCHMARKS_ROOT_PATH}/data/root/text_fixed/test_starttime.pkl"
 
     for mode in ['train', 'val', 'test']:
+        print(f"Preparing  {mode} text data", flush=True)
+
         with open(output_dir + 'norm_ts_' + mode + '.pkl', 'rb') as f:
             tsdata = pickle.load(f)
 
@@ -459,3 +462,9 @@ if __name__ == "__main__":
 
         data_text, data_times, data_time = text_reader.read_all_text_append_json(names, args.period_length)
         merge_text_ts(data_text, data_times, data_time, tsdata, args.period_length, output_dir + mode + 'p2x_data.pkl')
+
+    print("Preprocessing Done", flush=True)
+
+
+if __name__ == "__main__":
+    main()
