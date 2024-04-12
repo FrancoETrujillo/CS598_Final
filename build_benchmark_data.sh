@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/bin/zsh
+
+alias python=python3
+
 cd mimic3-benchmarks || exit
 
 DECOMPRESSED_DATA_PATH="../data/mimic3/"

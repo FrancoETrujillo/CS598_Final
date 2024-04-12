@@ -1,4 +1,7 @@
-#!/bin/bash
+#!/bin/zsh
+
+
+alias python=python3
 
 # Initialize variables
 input_dir=""
@@ -54,7 +57,7 @@ mkdir -p "${output_dir}"
 
 # Decompress .gz files
 # Collect all .gz files into an array
-mapfile -t gz_files < <(find "${input_dir}" -name '*.gz')
+gz_files=("${(@f)$(find "${input_dir}" -name '*.gz')}")
 
 # Get total number of files
 total_files=${#gz_files[@]}
@@ -63,7 +66,7 @@ current_file=0
 # Loop through each file and decompress
 for gz_file in "${gz_files[@]}"; do
     ((current_file++))
-    file_size_bytes=$(stat -c %s "$gz_file")  # Get file size in bytes
+    file_size_bytes=$(stat -f %z "$gz_file")  # Get file size in bytes
     # Calculate file size in MB and KB
     file_size_mb=$(echo "scale=2; $file_size_bytes / 1024 / 1024" | bc)
     file_size_kb=$(echo "scale=2; $file_size_bytes / 1024" | bc)
@@ -81,5 +84,3 @@ for gz_file in "${gz_files[@]}"; do
 done
 echo
 echo "Decompression complete. Files are located in ${output_dir}"
-
-

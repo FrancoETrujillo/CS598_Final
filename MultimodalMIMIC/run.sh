@@ -1,5 +1,7 @@
 export CUDA_VISIBLE_DEVICES=0
 
+alias python=python3
+
 for mixup_level in 'batch' 'batch_seq' 'batch_seq_feature'
 do
 python -W ignore main.py  --num_train_epochs 6  --modeltype 'TS_Text' \
