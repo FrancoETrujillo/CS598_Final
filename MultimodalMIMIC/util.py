@@ -1,11 +1,10 @@
 import os
 import sys
 
-import GlobalConfigs
-
 sys.path.insert(0, '../')
 sys.path.insert(0, '../mimic3-benchmarks')
 sys.path.insert(0, '../ClinicalNotesICU/models')
+import GlobalConfigs
 import pickle
 import re
 import numpy as np

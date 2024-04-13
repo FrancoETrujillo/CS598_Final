@@ -85,6 +85,12 @@ class TSNote_Irg(Dataset):
         ts = data_detail['irg_ts']
 
         ts_mask = data_detail['irg_ts_mask']
+
+        if 'text_data' not in data_detail:
+            data_detail['text_data'] = "dummy"
+        if 'text_time_to_end' not in data_detail:
+            data_detail['text_time_to_end'] = [0]
+
         text = data_detail['text_data']
 
         if len(text) == 0:
