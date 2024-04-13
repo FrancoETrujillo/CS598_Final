@@ -16,7 +16,9 @@ from transformers import (AutoTokenizer,
                           set_seed,
                           BertPreTrainedModel
                           )
-from MultimodalMIMIC.module import *
+import sys
+sys.path.append("/Users/hongyiwu/code/CS598_Final/MultimodalMIMIC")
+from module import *
 
 
 def hold_out(mask, perc=0.2):

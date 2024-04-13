@@ -1,5 +1,8 @@
-from MultimodalMIMIC.checkpoint import *
-from MultimodalMIMIC.util import *
+import sys
+sys.path.append("/Users/hongyiwu/code/CS598_Final/MultimodalMIMIC")
+
+from checkpoint import *
+from util import *
 from tqdm import tqdm
 from sklearn.metrics import roc_auc_score, precision_recall_curve, auc, f1_score
 

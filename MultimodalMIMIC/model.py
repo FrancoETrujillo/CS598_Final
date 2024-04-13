@@ -3,8 +3,12 @@ from torch import nn
 import torch.nn.functional as F
 import sys
 import math
-from MultimodalMIMIC.module import *
-from MultimodalMIMIC.interp import *
+
+import sys
+sys.path.append("/Users/hongyiwu/code/CS598_Final/MultimodalMIMIC")
+
+from module import *
+from interp import *
 import copy
 
 

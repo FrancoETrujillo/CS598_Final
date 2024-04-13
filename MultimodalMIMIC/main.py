@@ -10,6 +10,9 @@ import warnings
 import time
 import logging
 
+import sys
+sys.path.append("/Users/hongyiwu/code/CS598_Final/MultimodalMIMIC")
+
 logger = logging.getLogger(__name__)
 from model import *
 from train import *
