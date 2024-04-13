@@ -1,4 +1,5 @@
 import sys
+
 sys.path.insert(0, '.')
 
 from GlobalConfigs import *
@@ -19,7 +20,7 @@ from pathlib import Path
 from mimic3benchmark.readers import InHospitalMortalityReader, PhenotypingReader
 from mimic3models import common_utils
 from mimic3models.preprocessing import Normalizer
-from text_utils import *
+from MultimodalMIMIC.text_utils import *
 
 print("Executing mimic multimodal preprocess", flush=True)
 
@@ -194,10 +195,12 @@ def get_time_to_end_diffs(times, st, endtime=49):
     return timetoends
 
 
-def extract_irregular(dataPath_in, dataPath_out):
+def extract_irregular(dataPath_in, dataPath_out,
+                      channel_info_path=f"{MULTI_MODAL_MIMIC_PATH}/Data/irregular/channel_info.json",
+                      dis_config_path=f"{MULTI_MODAL_MIMIC_PATH}/Data/irregular/discretizer_config.json"):
     # Opening JSON file
-    channel_info_file = open(f"{MULTI_MODAL_MIMIC_PATH}/Data/irregular/channel_info.json")
-    dis_config_file = open(f"{MULTI_MODAL_MIMIC_PATH}/Data/irregular/discretizer_config.json")
+    channel_info_file = open(channel_info_path)
+    dis_config_file = open(dis_config_path)
     channel_info = json.load(channel_info_file)
     dis_config = json.load(dis_config_file)
     channel_name = dis_config['id_to_channel']
@@ -239,6 +242,8 @@ def extract_irregular(dataPath_in, dataPath_out):
         data_i['irg_ts'] = np.array(features_list)
         data_i['irg_ts_mask'] = np.array(features_mask_list)
         data_irregular.append(data_i)
+
+    print("Saving:", dataPath_out)
     with open(dataPath_out, 'wb') as f:
         pickle.dump(data_irregular, f)
 
@@ -249,7 +254,6 @@ def extract_irregular(dataPath_in, dataPath_out):
 def mean_std(dataPath_in, dataPath_out):
     with open(dataPath_in, 'rb') as f:
         data = pickle.load(f)
-
     irg_f_num = data[0]['irg_ts'].shape[1]
     reg_f_num = data[0]['reg_ts'].shape[1]
     irg_feature_list = [[] for _ in range(irg_f_num)]
@@ -279,6 +283,8 @@ def mean_std(dataPath_in, dataPath_out):
         irg_stds.append(stat.stdev(irg_vals))
         reg_means.append(stat.mean(reg_vals))
         reg_stds.append(stat.stdev(reg_vals))
+
+    print("Saving:", dataPath_out)
     with open(dataPath_out, 'wb') as f:
         pickle.dump((irg_means, irg_stds, reg_means, reg_stds), f)
 
@@ -307,6 +313,7 @@ def normalize(dataPath_in, dataPath_out, normalizer_path):
                 reg_ts[t_idx][f_idx] = (val - reg_means[f_idx]) / reg_stds[f_idx]
 
     # import pdb;pdb.set_trace()
+    print("Saving:", dataPath_out)
     with open(dataPath_out, 'wb') as f:
         pickle.dump(data, f)
 

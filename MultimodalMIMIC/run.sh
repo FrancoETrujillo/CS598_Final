@@ -10,7 +10,7 @@ python -W ignore main.py  --num_train_epochs 6  --modeltype 'TS_Text' \
                 --output_dir "run/TS_Text/" --embed_dim 128 \
                 --model_name "bioLongformer"\
                 --task 'ihm'\
-                --file_path '/media/ftrujillo/FRD/Projects/UIUC/DLH/CS598_Final/mimic3-benchmarks/data/in-hospital-mortality' \
+                --file_path '/media/ftrujillo/FRD/Projects/UIUC/DLH/CS598_Final/MultimodalMIMIC/Data/ihm' \
                 --num_labels 2 \
                 --num_heads 8\
                 --irregular_learn_emb_text\

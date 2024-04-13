@@ -1,6 +1,8 @@
 import os
 import sys
 
+import GlobalConfigs
+
 sys.path.insert(0, '../')
 sys.path.insert(0, '../mimic3-benchmarks')
 sys.path.insert(0, '../ClinicalNotesICU/models')
@@ -39,7 +41,7 @@ def parse_args():
         "--task", type=str, default="ihm"
     )
     parser.add_argument(
-        "--file_path", type=str, default="Data", help="A path to dataset folder"
+        "--file_path", type=str, default=f"{GlobalConfigs.MULTI_MODAL_MIMIC_PATH}/Data", help="A path to dataset folder"
     )
     parser.add_argument("--output_dir", type=str, default="Checkpoints", help="Where to store the final model.")
     parser.add_argument("--tensorboard_dir", type=str, default=None, help="Where to store the final model.")

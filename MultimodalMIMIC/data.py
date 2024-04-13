@@ -79,6 +79,7 @@ class TSNote_Irg(Dataset):
         else:
             notes_order = 'Last' if self.order_sample[idx] == 1 else 'First'
         data_detail = self.data[idx]
+        # print("Franco", f"data_detail {data_detail}")
         idx = data_detail['name']
         reg_ts = data_detail['reg_ts']
         ts = data_detail['irg_ts']
@@ -153,8 +154,11 @@ class TSNote_Irg(Dataset):
 def load_data(file_path, mode, debug=False, text=False):
     if not text:
         dataPath = os.path.join(file_path, mode + 'p2x_data.pkl')
+        print("Franco", f"Trying to load: {dataPath}")
     else:
         dataPath = os.path.join(file_path, mode + 'token_attn.pkl')
+        print("Franco", f"Trying to load: {dataPath}")
+
     if os.path.isfile(dataPath):
         print('Using', dataPath)
         with open(dataPath, 'rb') as f:
