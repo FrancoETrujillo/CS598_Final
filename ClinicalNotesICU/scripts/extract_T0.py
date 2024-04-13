@@ -18,6 +18,7 @@ def diff(time1, time2):
     b = np.datetime64(time2)
     return (a - b).astype('timedelta64[h]').astype(int)
 
+print("start extract_T0.py")
 
 for dataset_type in dataset_types:
     train_path = f"{BENCHMARKS_ROOT_PATH}/data/root/train/"
@@ -59,3 +60,5 @@ for dataset_type in dataset_types:
 
     with open(starttime_path, 'wb') as f:
         pickle.dump(episodeToStartTimeMapping, f, pickle.HIGHEST_PROTOCOL)
+
+print("finish extract_T0.py")

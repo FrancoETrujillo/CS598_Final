@@ -8,7 +8,7 @@ import pickle
 import re
 import numpy as np
 import json
-from data import *
+from MultimodalMIMIC.data import *
 import statistics as stat
 
 logger = None
@@ -32,6 +32,194 @@ from transformers import (AutoTokenizer,
 
                           )
 
+def parse_args_fixed_arg():
+    parser = argparse.ArgumentParser(description="Alignment text and ts data")
+    task = "ihm"
+    file_path = "Data"
+    output_dir = "Checkpoints"
+    tensorboard_dir = None
+
+    seed = 42
+    mode = "train"
+    modeltype = "TS_Text"
+    eval_score = ['auc', 'auprc', 'f1']
+
+    num_labels = 2
+    max_length = 128
+    pad_to_max_length = False
+    model_path = None
+    train_batch_size = 8
+    eval_batch_size = 32
+    num_update_bert_epochs = 10
+    num_train_epochs = 10
+
+    txt_learning_rate = 5e-5
+    ts_learning_rate = 0.0004
+    gradient_accumulation_steps = 1
+    weight_decay = 0.01
+    lr_scheduler_type = "linear"
+    pt_mask_ratio = 0.15
+    mean_mask_length = 3
+
+    chunk = False
+    chunk_type = 'sent_doc_pos'
+    warmup_proportion = 0.10
+    kernel_size = 1
+    num_heads = 8
+    layers = 3
+    cross_layers = 3
+    embed_dim = 30
+
+    irregular_learn_emb_ts = False
+    irregular_learn_emb_text = False
+    reg_ts = False
+    tt_max = 48
+    embed_time = 64
+    ts_to_txt = False
+    txt_to_ts = False
+
+    dropout = 0.10
+    model_name = 'BioBert'
+    num_of_notes = 5
+    notes_order = None
+    ratio_notes_order = None
+
+    bertcount = 3
+    first_n_item = 3
+    fine_tune = False
+    self_cross = False
+    TS_mixup = False
+    mixup_level = None
+
+    fp16 = False
+    debug = False
+    generate_data = False
+    FTLSTM = False
+    Interp = False
+    cpu = False
+    datagereate_seed = 42
+    TS_model = 'Atten'
+    cross_method = 'self_cross'
+
+    parser.add_argument("--task", type=str, default=task)
+    parser.add_argument("--file_path", type=str, default=file_path, help="A path to dataset folder")
+    parser.add_argument("--output_dir", type=str, default=output_dir, help="Where to store the final model.")
+    parser.add_argument("--tensorboard_dir", type=str, default=tensorboard_dir, help="Where to store the final model.")
+
+    parser.add_argument("--seed", type=int, default=seed, help="A seed for reproducible training.")
+    parser.add_argument("--mode", type=str, default=mode, help="train/test")
+    parser.add_argument("--modeltype", type=str, default=modeltype, help="TS, Text or TS_Text")
+    parser.add_argument("--eval_score", default=eval_score, type=list)
+
+    parser.add_argument('--num_labels', type=int, default=num_labels)
+    parser.add_argument("--max_length", type=int, default=max_length, help=(
+        "The maximum total input sequence length after tokenization. Sequences longer than this will be truncated," " sequences shorter will be padded if `--pad_to_max_lengh` is passed."), )
+    parser.add_argument("--pad_to_max_length", action="store_true",
+                        help="If passed, pad all samples to `max_length`. Otherwise, dynamic padding is used.", )
+    parser.add_argument("--model_path", type=str,
+                        help="Path to pretrained model or model identifier from huggingface.co/models.",
+                        )
+    parser.add_argument(
+        "--train_batch_size",
+        type=int,
+        default=train_batch_size,
+        help="Batch size  for the training dataloader.",
+    )
+    parser.add_argument(
+        "--eval_batch_size",
+        type=int,
+        default=eval_batch_size,
+        help="Batch size for the evaluation dataloader.",
+    )
+    parser.add_argument("--num_update_bert_epochs", type=int, default=num_update_bert_epochs,
+                        help="Number of per training epochs update the bert model.")
+    parser.add_argument("--num_train_epochs", type=int, default=num_train_epochs, help="Total number of training epochs to perform.")
+
+    parser.add_argument(
+        "--txt_learning_rate",
+        type=float,
+        default=txt_learning_rate,
+        help="Initial learning rate for Txt self-attention and Bert to use.",
+    )
+
+    parser.add_argument(
+        "--ts_learning_rate",
+        type=float,
+        default=ts_learning_rate,
+        help="Initial learning rate for TS self-attention to use.",
+    )
+
+    parser.add_argument(
+        "--gradient_accumulation_steps",
+        type=int,
+        default=gradient_accumulation_steps,
+        help="Number of updates steps to accumulate before performing a backward/update pass.",
+    )
+
+    parser.add_argument("--weight_decay", type=float, default=weight_decay, help="Weight decay to use.")
+    parser.add_argument(
+        "--lr_scheduler_type",
+        type=str,
+        default=lr_scheduler_type,
+        help="The scheduler type to use.",
+        choices=["linear", "cosine", "cosine_with_restarts", "polynomial", "constant", "constant_with_warmup"],
+    )
+    parser.add_argument("--pt_mask_ratio", default=pt_mask_ratio, type=float, help="mask rate for pretrain .",
+                        )
+    parser.add_argument("--mean_mask_length", default=mean_mask_length, type=int, help="mean mask length for pretrain .",
+                        )
+
+    parser.add_argument('--chunk', action='store_true')
+    parser.add_argument("--chunk_type", default=chunk_type, type=str,
+                        help="How to chunk the text. sent_doc_pos: sentence level position + doc level position")
+    parser.add_argument("--warmup_proportion", default=warmup_proportion, type=float,
+                        help="proportion for the warmup in the lr scheduler.")
+    parser.add_argument("--kernel_size", type=int, default=kernel_size, help="Kernel size for CNN.")
+    parser.add_argument("--num_heads", type=int, default=num_heads, help="Number of heads.")
+    parser.add_argument("--layers", type=int, default=layers, help="Number of transformer encoder layer.")
+    parser.add_argument("--cross_layers", type=int, default=cross_layers, help="Number of transformer cross encoder layer.")
+    parser.add_argument("--embed_dim", default=embed_dim, type=int, help="attention embedding dim.")
+
+    parser.add_argument("--irregular_learn_emb_ts", action='store_true')
+    parser.add_argument("--irregular_learn_emb_text", action='store_true')
+    parser.add_argument("--reg_ts", action='store_true')
+    parser.add_argument("--tt_max", default=tt_max, type=int, help="max time for irregular time series.")
+    parser.add_argument("--embed_time", default=embed_time, type=int, help="emdedding for time.")
+    parser.add_argument('--ts_to_txt', action='store_true')
+    parser.add_argument('--txt_to_ts', action='store_true')
+
+    parser.add_argument("--dropout", default=dropout, type=float, help="dropout.")
+    parser.add_argument("--model_name", default=model_name, type=str, help="model for text")
+    parser.add_argument('--num_of_notes', help='Number of notes to include for a patient input 0 for all the notes',
+                        type=int, default=num_of_notes)
+    parser.add_argument('--notes_order',
+                        help='Should we get notes from beginning of the admission time or from end of it, options are: 1. First: pick first notes 2. Last: pick last notes',
+                        default=notes_order)
+    parser.add_argument('--ratio_notes_order',
+                        help='The parameter of a bernulli distribution on whether take notes from First or Last, 1-Last, 0-First',
+                        type=float, default=ratio_notes_order)
+
+    parser.add_argument('--bertcount', type=int, default=bertcount, help='number of count update bert in total')
+    parser.add_argument('--first_n_item', help='Top n item in val seeds', type=int, default=first_n_item)
+    parser.add_argument('--fine_tune', action='store_true')
+    parser.add_argument('--self_cross', action='store_true')
+    parser.add_argument('--TS_mixup', action='store_true', help='mix up reg and irg data')
+    parser.add_argument("--mixup_level", default=mixup_level, type=str,
+                        help="mixedup level for two time series data, choose: 'batch', batch_seq' or 'batch_seq_feature'. ")
+
+    parser.add_argument('--fp16', action='store_true')
+    parser.add_argument('--debug', action='store_true')
+    parser.add_argument('--generate_data', action='store_true')
+    parser.add_argument('--FTLSTM', action='store_true')
+    parser.add_argument('--Interp', action='store_true')
+    parser.add_argument('--cpu', action='store_true')
+    parser.add_argument("--datagereate_seed", type=int, default=datagereate_seed, help="A seed for reproducible data generation .")
+    parser.add_argument("--TS_model", type=str, default=TS_model, help="LSTM, CNN, Atten")
+    parser.add_argument("--cross_method", default=cross_method, type=str,
+                        help="baseline fusion method: MAGGate, MulT, Outer,concat")
+    args = parser.parse_args()
+
+    return args
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Alignment text and ts data")

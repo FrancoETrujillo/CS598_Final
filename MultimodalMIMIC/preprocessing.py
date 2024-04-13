@@ -443,9 +443,11 @@ def main():
     # test_textdata_fixed = "../mimic3-benchmarks/data/root/test_text_fixed/"
     # test_starttime_path = "../mimic3-benchmarks/test_starttime.pkl"
     textdata_fixed = f"{BENCHMARKS_ROOT_PATH}/data/root/text_fixed/train/"
-    starttime_path = f"{BENCHMARKS_ROOT_PATH}/data/root/text_fixed/starttime.pkl"
+    # starttime_path = f"{BENCHMARKS_ROOT_PATH}/data/root/text_fixed/starttime.pkl"
+    starttime_path = f"{BENCHMARKS_ROOT_PATH}/data/starttime.pkl"
     test_textdata_fixed = f"{BENCHMARKS_ROOT_PATH}/data/root/text_fixed/test/"
-    test_starttime_path = f"{BENCHMARKS_ROOT_PATH}/data/root/text_fixed/test_starttime.pkl"
+    # test_starttime_path = f"{BENCHMARKS_ROOT_PATH}/data/root/text_fixed/test_starttime.pkl"
+    test_starttime_path = f"{BENCHMARKS_ROOT_PATH}/data/test_starttime.pkl"
 
     for mode in ['train', 'val', 'test']:
         print(f"Preparing  {mode} text data", flush=True)

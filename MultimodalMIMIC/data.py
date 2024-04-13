@@ -9,7 +9,7 @@ from torch.nn.utils.rnn import pad_sequence
 import os
 from transformers import AutoTokenizer, BertTokenizer
 import torch.nn as nn
-from util import *
+from MultimodalMIMIC.util import *
 
 
 def data_perpare(args, mode, tokenizer, data=None):

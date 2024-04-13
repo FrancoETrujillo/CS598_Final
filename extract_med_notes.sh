@@ -1,5 +1,6 @@
 alias python=python3
 
 cd ClinicalNotesICU || exit
-python ./scripts/extract_notes.py
-python ./scripts/extract_T0.py 
+python -m nltk.downloader punkt
+python -W ignore  ./scripts/extract_notes.py
+python -W ignore ./scripts/extract_T0.py 

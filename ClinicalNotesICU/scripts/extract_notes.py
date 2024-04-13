@@ -129,6 +129,7 @@ def getText(t):
 def getSentences(t):
     return list(preprocess_mimic(t))
 
+print("start extract_notes.py")
 
 for dataset_type in dataset_types:
 
@@ -226,3 +227,5 @@ for dataset_type in dataset_types:
 
     with open(os.path.join(output_folder, 'test_hadm_id2index'), 'w') as f:
         json.dump(hadm_id2index, f)
+
+print("finish extract_notes.py")

@@ -3,8 +3,8 @@ from torch import nn
 import torch.nn.functional as F
 import sys
 import math
-from module import *
-from interp import *
+from MultimodalMIMIC.module import *
+from MultimodalMIMIC.interp import *
 import copy
 
 
