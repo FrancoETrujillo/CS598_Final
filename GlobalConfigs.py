@@ -1,4 +1,4 @@
-PROJECT_BASE_PATH = "C:/Users/frank/code/CS598_Final"
+PROJECT_BASE_PATH = "/media/ftrujillo/FRD/Projects/UIUC/DLH/CS598_Final"
 BENCHMARKS_ROOT_PATH = f"{PROJECT_BASE_PATH}/mimic3-benchmarks"
 MIMIC_UNPROCESSED_DATA_PATH = f"{PROJECT_BASE_PATH}/data/mimic3"
 NOTE_EXTRACTION_OUT_PATH = f"{BENCHMARKS_ROOT_PATH}/data/root/text_fixed"
