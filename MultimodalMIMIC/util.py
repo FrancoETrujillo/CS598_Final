@@ -33,8 +33,7 @@ from transformers import (AutoTokenizer,
 
                           )
 
-
-def parse_args():
+def parse_args(arg_list=None):
     parser = argparse.ArgumentParser(description="Alignment text and ts data")
     parser.add_argument(
         "--task", type=str, default="ihm"
@@ -156,9 +155,12 @@ def parse_args():
     parser.add_argument("--TS_model", type=str, default='Atten', help="LSTM, CNN, Atten")
     parser.add_argument("--cross_method", default='self_cross', type=str,
                         help="baseline fusion method: MAGGate, MulT, Outer,concat")
-    args = parser.parse_args()
-
-    return args
+    
+    if parse_args:
+        return parser
+    else:
+        args = parser.parse_args()
+        return args
 
 
 def loadBert(args, device):
