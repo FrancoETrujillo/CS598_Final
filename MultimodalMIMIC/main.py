@@ -1,3 +1,7 @@
+import sys
+
+sys.path.insert(0, '/media/ftrujillo/FRD/Projects/UIUC/DLH/CS598_Final/MultimodalMIMIC')
+
 import pandas as pd
 import os
 import torch

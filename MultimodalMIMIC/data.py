@@ -80,13 +80,21 @@ class TSNote_Irg(Dataset):
             notes_order = 'Last' if self.order_sample[idx] == 1 else 'First'
         data_detail = self.data[idx]
         # print("Franco", f"data_detail {data_detail}")
+
         idx = data_detail['name']
         reg_ts = data_detail['reg_ts']
         ts = data_detail['irg_ts']
 
         ts_mask = data_detail['irg_ts_mask']
+        if "text_data" not in data_detail.keys():
+            data_detail["text_data"] = "No Data"
+            # return None
+
+        if "text_time_to_end" not in data_detail.keys():
+            data_detail["text_time_to_end"] = [0]
         text = data_detail['text_data']
 
+        # return None
         if len(text) == 0:
             return None
         text_token = []

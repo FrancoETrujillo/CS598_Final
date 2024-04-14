@@ -1,11 +1,13 @@
 import os
 import sys
 
-import GlobalConfigs
 
 sys.path.insert(0, '../')
+sys.path.insert(0, '/media/ftrujillo/FRD/Projects/UIUC/DLH/CS598_Final')
 sys.path.insert(0, '../mimic3-benchmarks')
 sys.path.insert(0, '../ClinicalNotesICU/models')
+import GlobalConfigs
+
 import pickle
 import re
 import numpy as np
@@ -41,7 +43,7 @@ def parse_args():
         "--task", type=str, default="ihm"
     )
     parser.add_argument(
-        "--file_path", type=str, default=f"{GlobalConfigs.MULTI_MODAL_MIMIC_PATH}/Data", help="A path to dataset folder"
+        "--file_path", type=str, default=f"{GlobalConfigs.PROJECT_BASE_PATH}/Data/ihm", help="A path to dataset folder"
     )
     parser.add_argument("--output_dir", type=str, default="Checkpoints", help="Where to store the final model.")
     parser.add_argument("--tensorboard_dir", type=str, default=None, help="Where to store the final model.")
@@ -118,7 +120,7 @@ def parse_args():
     parser.add_argument("--num_heads", type=int, default=8, help="Number of heads.")
     parser.add_argument("--layers", type=int, default=3, help="Number of transformer encoder layer.")
     parser.add_argument("--cross_layers", type=int, default=3, help="Number of transformer cross encoder layer.")
-    parser.add_argument("--embed_dim", default=30, type=int, help="attention embedding dim.")
+    parser.add_argument("--embed_dim", default=128, type=int, help="attention embedding dim.")
 
     parser.add_argument("--irregular_learn_emb_ts", action='store_true')
     parser.add_argument("--irregular_learn_emb_text", action='store_true')
