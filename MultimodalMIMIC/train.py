@@ -29,7 +29,8 @@ def eval_test(args, model, test_data_loader, device):
             continue
 
         file = str(seed) + '.pth.tar'
-        file_path = os.path.join(subdir, file)
+        # file_path = os.path.join(subdir, file)
+        file_path = subdir + "/" + file
         print(file_path)
         checkpoint = torch.load(file_path)
         model.load_state_dict(checkpoint['network'])
