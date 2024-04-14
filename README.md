@@ -88,35 +88,7 @@ wget -r -N -c -np https://physionet.org/files/mimiciii-demo/1.4/
         └── TS_Text
 ```
 
-### Build benchmark data
+### Build benchmark data, test and train model
 
-``` shell
-./build_benchmark_data.sh
-```
-
-### Extract medical notes
-
-#### Install nltk
-
-`
-pip install nltk
-`
-
-In [ClinicalNotesICU/scripts](ClinicalNotesICU/scripts)
-modify [extract_notes.py](ClinicalNotesICU/scripts/extract_notes.py)
-and [extract_T0.py](ClinicalNotesICU/scripts/extract_T0.py) to use the correct path for your mimic-benchmarks and
-mimic_original_csvs folders
-
-```shell
-./extract_med_notes.sh
-```
-
-## Multimodal Mimic
-
-### Preprocess
-
-```shell
-python MultimodalMIMIC/preprocessing.py
-```
-
+Use the [ProjectNotebook.ipynb](ProjectNotebook.ipynb)
 
