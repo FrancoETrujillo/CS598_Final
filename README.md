@@ -1,51 +1,44 @@
-## Original repos
+# CS598 Final Project
 
-### MIMIC benchmarks
+In this project, we aim to reproduce the results of the paper "Improving Medical Predictions by Irregular Multimodal
+Electronic Health Records Modeling" by Xinlu Zhang, Shiyang Li, Zhiyu Chen, Xifeng Yan, and Linda Petzold.
 
-`
-git clone https://github.com/YerevaNN/mimic3-benchmarks.git
-`
+## Original paper and Repo
 
-### ClinicalNotesICU
+Paper: https://arxiv.org/abs/2210.12156
 
-`
-git clone https://github.com/kaggarwal/ClinicalNotesICU.git
-`
+Repo: https://github.com/XZhang97666/MultimodalMIMIC
 
-### MultimodalMIMIC
+## About this repo
 
-`
-git clone https://github.com/XZhang97666/MultimodalMIMIC.git
-`
+For this project we have cloned the original repo, [MultimodalMIMIC](https://github.com/XZhang97666/MultimodalMIMIC),
+as well as [ClinicalNotesICU](https://github.com/kaggarwal/ClinicalNotesICU)
+and [mimic3-benchmarks](https://github.com/YerevaNN/mimic3-benchmarks)
+into this repo as modules to use on out Notebook [ProjectNotebook.ipynb](ProjectNotebook.ipynb).
 
-### Env setup
+## Project Setup
 
-follow https://github.com/YerevaNN/mimic3-benchmarks (use the same env for all following steps)
-
-## Preparing data
-
-### Download Full data
+- Clone this repo
+- Install Python 3 if not already installed
+- Install Jupyter if not already installed
+- Create a virtual environment, we recommend using conda
+- Install the required packages using the Requirements.txt file using the following command:
 
 ``` shell
-# change physionet_username to your username
-wget -r -N -c -np --user physionet_username --ask-password https://physionet.org/files/mimiciii/1.4/
-
-# move compressed files to data/MIMICIII_Original
+pip install -r Requirements.txt
 ```
 
-### Demo Dataset (Not compressed)
+- Open [GlobalConfig.py](GlobalConfigs.py) and set the PROJECT_BASE_PATH to point to the root of this project
+- Open [ProjectNotebook.ipynb](ProjectNotebook.ipynb), read and edit the variables for paths and credentials as needed.
+  These are some of the main configs to set:
+  - Set the flags on the **Config tasks to execute** section to enable the downloading, decompressing, and processing
+    tasks.
+  - Set credentials to physionet on the **Download dataset** section. if intend to download the dataset from the
+    notebook.
+  - Set the paths to the dataset folders on the **Configuring imports and directories** section (only needed if the
+    dataset is not in the default paths from the notebook).
 
-``` shell
-wget -r -N -c -np https://physionet.org/files/mimiciii-demo/1.4/
-```
-
-### Uncompress Full dataset
-
-``` shell
-./decompress_mimic.sh -d data/MIMICIII_Original -o data/mimic3
-```
-
-### Folder Structure
+### Reference Folder Structure
 
 ```
 .
@@ -88,7 +81,4 @@ wget -r -N -c -np https://physionet.org/files/mimiciii-demo/1.4/
         └── TS_Text
 ```
 
-### Build benchmark data, test and train model
-
-Use the [ProjectNotebook.ipynb](ProjectNotebook.ipynb)
 
