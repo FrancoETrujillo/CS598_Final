@@ -161,3 +161,4 @@ cython_debug/
 /data/
 /mimic3-benchmarks/data/
 /MultimodalMIMIC/Data/ihm/
+/MultimodalMIMIC/Data/ihm_**

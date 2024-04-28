@@ -42,6 +42,7 @@ def eval_test(args, model, test_data_loader, device):
 
     with open(rootdir + "/result.pkl", "wb") as f:
         pickle.dump(result_dict, f)
+    return result_dict
 
 
 def trainer_irg(model, args, accelerator, train_dataloader, dev_dataloader, test_data_loader, device, optimizer,
