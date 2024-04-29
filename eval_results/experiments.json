@@ -1,22 +1,202 @@
 [
     {
+        "tag": "experiment6e1000sZ",
+        "epochs": 6,
+        "max_text_length": 512,
+        "n_samples": 1000,
+        "imputation": "zero",
+        "training_time_millis": 1865093.8928127289,
+        "eval_auc_results": {
+            "val": 0.8536619326093009,
+            "test": 0.8252864782276546
+        },
+        "eval_f1_results": {
+            "val": 0.5161290322580645,
+            "test": 0.4358974358974359
+        },
+        "eval_auprc_results": {
+            "val": 0.5274366693406054,
+            "test": 0.41081251193680945
+        }
+    },
+    {
+        "tag": "experiment6e1000sP",
+        "epochs": 6,
+        "max_text_length": 512,
+        "n_samples": 1000,
+        "imputation": "previous",
+        "training_time_millis": 1915962.0385169983,
+        "eval_auc_results": {
+            "val": 0.8895502645502645,
+            "test": 0.8031035141329259
+        },
+        "eval_f1_results": {
+            "val": 0.6192170818505338,
+            "test": 0.3611111111111111
+        },
+        "eval_auprc_results": {
+            "val": 0.659714782039529,
+            "test": 0.3691306329842732
+        }
+    },
+    {
+        "tag": "experiment6eFullP",
+        "epochs": 6,
+        "max_text_length": 512,
+        "n_samples": null,
+        "imputation": "previous",
+        "training_time_millis": 31028095.950841904,
+        "eval_auc_results": {
+            "val": 0.8271549875742722,
+            "test": 0.8163001360319881
+        },
+        "eval_f1_results": {
+            "val": 0.4563510392609699,
+            "test": 0.4363636363636364
+        },
+        "eval_auprc_results": {
+            "val": 0.4652122227927604,
+            "test": 0.42784473558900366
+        }
+    },
+    {
+        "tag": "experiment3e3000sP",
+        "epochs": 3,
+        "max_text_length": 512,
+        "n_samples": 3000,
+        "imputation": "previous",
+        "training_time_millis": null,
+        "eval_auc_results": {
+            "val": 0.7993374132613724,
+            "test": 0.7942761316013702
+        },
+        "eval_f1_results": {
+            "val": 0.35430463576158944,
+            "test": 0.3655913978494624
+        },
+        "eval_auprc_results": {
+            "val": 0.43630551981922105,
+            "test": 0.3891894719986181
+        }
+    },
+    {
+        "tag": "experiment6e3000sP",
+        "epochs": 6,
+        "max_text_length": 512,
+        "n_samples": 3000,
+        "imputation": "previous",
+        "training_time_millis": null,
+        "eval_auc_results": {
+            "val": 0.8460611025443331,
+            "test": 0.8154778983428105
+        },
+        "eval_f1_results": {
+            "val": 0.4169381107491857,
+            "test": 0.4007029876977153
+        },
+        "eval_auprc_results": {
+            "val": 0.5197667644282208,
+            "test": 0.45074666767987664
+        }
+    },
+    {
+        "tag": "experiment3e1000sP",
+        "epochs": 3,
+        "max_text_length": 512,
+        "n_samples": 1000,
+        "imputation": "previous",
+        "training_time_millis": null,
+        "eval_auc_results": {
+            "val": 0.8371188387635756,
+            "test": 0.7977463712757831
+        },
+        "eval_f1_results": {
+            "val": 0.4788732394366197,
+            "test": 0.3728813559322034
+        },
+        "eval_auprc_results": {
+            "val": 0.4876255989089559,
+            "test": 0.371801536350802
+        }
+    },
+    {
+        "tag": "experiment3e3000sZ",
+        "epochs": 3,
+        "max_text_length": 512,
+        "n_samples": 3000,
+        "imputation": "zero",
+        "training_time_millis": null,
+        "eval_auc_results": {
+            "val": 0.8371188387635756,
+            "test": 0.7832231293581651
+        },
+        "eval_f1_results": {
+            "val": 0.4788732394366197,
+            "test": 0.42424242424242425
+        },
+        "eval_auprc_results": {
+            "val": 0.4876255989089559,
+            "test": 0.38183544968653793
+        }
+    },
+    {
         "tag": "experiment1eFullP",
         "epochs": 1,
         "max_text_length": 512,
         "n_samples": null,
         "imputation": "previous",
-        "training_time_millis": 2040278.5608768463,
+        "training_time_millis": null,
         "eval_auc_results": {
-            "val": 0.8358293293628374,
-            "test": 0.8255975289395876
+            "val": 0.8365179261265772,
+            "test": 0.8263816802761113
         },
         "eval_f1_results": {
-            "val": 0.47425414364640883,
-            "test": 0.4364123159303882
+            "val": 0.472884048105287,
+            "test": 0.4339360222531294
         },
         "eval_auprc_results": {
-            "val": 0.4791221184535156,
-            "test": 0.4390816106242794
+            "val": 0.4794468676917342,
+            "test": 0.43708035754174024
+        }
+    },
+    {
+        "tag": "experiment1e1000sP",
+        "epochs": 1,
+        "max_text_length": 512,
+        "n_samples": 1000,
+        "imputation": "previous",
+        "training_time_millis": null,
+        "eval_auc_results": {
+            "val": 0.8365179261265772,
+            "test": 0.7090145148968678
+        },
+        "eval_f1_results": {
+            "val": 0.472884048105287,
+            "test": 0.33139534883720934
+        },
+        "eval_auprc_results": {
+            "val": 0.4794468676917342,
+            "test": 0.2783268779808493
+        }
+    },
+    {
+        "tag": "experiment1e3000sP",
+        "epochs": 1,
+        "max_text_length": 512,
+        "n_samples": 3000,
+        "imputation": "previous",
+        "training_time_millis": null,
+        "eval_auc_results": {
+            "val": 0.8365179261265772,
+            "test": 0.7643248865355523
+        },
+        "eval_f1_results": {
+            "val": 0.472884048105287,
+            "test": 0.3551587301587302
+        },
+        "eval_auprc_results": {
+            "val": 0.4794468676917342,
+            "test": 0.34836845738803746
         }
     }
 ]

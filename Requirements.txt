@@ -13,3 +13,5 @@ tensorflow==2.16.1
 torch==2.2.2
 tqdm==4.66.2
 transformers==4.39.3
+adjustText==1.1.1
+py-markdown-table==0.4.0
