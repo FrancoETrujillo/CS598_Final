@@ -1,0 +1,22 @@
+[
+    {
+        "tag": "experiment6e3000sP",
+        "epochs": 6,
+        "max_text_length": 512,
+        "n_samples": 3000,
+        "imputation": "previous",
+        "training_time_millis": null,
+        "eval_auc_results": {
+            "val": 0.8351416730917502,
+            "test": 0.8220624228354809
+        },
+        "eval_f1_results": {
+            "val": 0.4264264264264264,
+            "test": 0.43111831442463533
+        },
+        "eval_auprc_results": {
+            "val": 0.4765806533818098,
+            "test": 0.4398142387885474
+        }
+    }
+]

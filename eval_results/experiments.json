@@ -1,0 +1,22 @@
+[
+    {
+        "tag": "experiment1eFullP",
+        "epochs": 1,
+        "max_text_length": 512,
+        "n_samples": null,
+        "imputation": "previous",
+        "training_time_millis": 2040278.5608768463,
+        "eval_auc_results": {
+            "val": 0.8358293293628374,
+            "test": 0.8255975289395876
+        },
+        "eval_f1_results": {
+            "val": 0.47425414364640883,
+            "test": 0.4364123159303882
+        },
+        "eval_auprc_results": {
+            "val": 0.4791221184535156,
+            "test": 0.4390816106242794
+        }
+    }
+]

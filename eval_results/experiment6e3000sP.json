@@ -1,0 +1,42 @@
+[
+    {
+        "tag": "experiment6e3000sP",
+        "epochs": 6,
+        "max_text_length": 512,
+        "n_samples": 3000,
+        "imputation": "previous",
+        "training_time_millis": null,
+        "eval_auc_results": {
+            "val": 0.8459165381649961,
+            "test": 0.8161479254699427
+        },
+        "eval_f1_results": {
+            "val": 0.39522998296422485,
+            "test": 0.3985239852398524
+        },
+        "eval_auprc_results": {
+            "val": 0.5156741842572563,
+            "test": 0.4514660643879602
+        }
+    },
+    {
+        "tag": "experiment6e3000sP",
+        "epochs": 6,
+        "max_text_length": 512,
+        "n_samples": 3000,
+        "imputation": "previous",
+        "training_time_millis": null,
+        "eval_auc_results": {
+            "val": 0.9184820740169621,
+            "test": 0.800924235310484
+        },
+        "eval_f1_results": {
+            "val": 0.5370051635111877,
+            "test": 0.3405940594059406
+        },
+        "eval_auprc_results": {
+            "val": 0.7158659271716359,
+            "test": 0.387900832034881
+        }
+    }
+]
