@@ -198,5 +198,25 @@
             "val": 0.4794468676917342,
             "test": 0.34836845738803746
         }
+    },
+    {
+        "tag": "experiment1e1000sP",
+        "epochs": 1,
+        "max_text_length": 512,
+        "n_samples": 1000,
+        "imputation": "previous",
+        "training_time_millis": 244438.78960609436,
+        "eval_auc_results": {
+            "val": 0.8100546505151768,
+            "test": 0.7846925133689839
+        },
+        "eval_f1_results": {
+            "val": 0.3725490196078431,
+            "test": 0.26666666666666666
+        },
+        "eval_auprc_results": {
+            "val": 0.4268401493767072,
+            "test": 0.3548482107937788
+        }
     }
 ]
