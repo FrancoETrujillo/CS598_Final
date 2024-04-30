@@ -38,5 +38,25 @@
             "val": 0.46827023640434184,
             "test": 0.3808065834263375
         }
+    },
+    {
+        "tag": "experiment3e3000sP",
+        "epochs": 3,
+        "max_text_length": 512,
+        "n_samples": 3000,
+        "imputation": "previous",
+        "training_time_millis": null,
+        "eval_auc_results": {
+            "val": 0.8309791827293754,
+            "test": 0.8029680082424748
+        },
+        "eval_f1_results": {
+            "val": 0.4364820846905538,
+            "test": 0.38275862068965516
+        },
+        "eval_auprc_results": {
+            "val": 0.5101660792378169,
+            "test": 0.3907508766285102
+        }
     }
 ]
